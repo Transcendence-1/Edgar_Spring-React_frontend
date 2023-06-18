@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -12,7 +12,8 @@ import { CustomersTable } from 'src/sections/customer/customers-table';
 import { CustomersSearch } from 'src/sections/customer/customers-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 
-import SignInModal from './modal';
+import AddModal from './addModal';
+import UserService from '../services/UserService'
 
 
 const now = new Date();
@@ -34,12 +35,13 @@ const data = [
   }
 ];
 
-const useCustomers = (page, rowsPerPage) => {
+
+const useCustomers = (page, rowsPerPage,users) => {
   return useMemo(
     () => {
-      return applyPagination(data, page, rowsPerPage);
+      return applyPagination(users, page, rowsPerPage);
     },
-    [page, rowsPerPage]
+    [page, rowsPerPage, users]
   );
 };
 
@@ -53,13 +55,20 @@ const useCustomerIds = (customers) => {
 };
 
 const Page = () => {
+
+  const [users, setUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false); // Initialize state with false
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
+  const customers = useCustomers(page, rowsPerPage, users);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
 
+  useEffect(() => {
+    UserService.getUsers().then((res) => {
+      setUsers(res.data);
+    });
+  }, []);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -80,6 +89,7 @@ const Page = () => {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   const handleToggleSignInModal = () => {
+    // console.log(users);
     setIsSignInModalOpen(!isSignInModalOpen);
   };
 
@@ -122,12 +132,12 @@ const Page = () => {
                 >
                   Add
                 </Button>
-                <SignInModal isOpen={isSignInModalOpen} onClose={handleToggleSignInModal} />
+                <AddModal isOpen={isSignInModalOpen} onClose={handleToggleSignInModal} />
               </div>
             </Stack>
             {/* <CustomersSearch /> */}
             <CustomersTable
-              count={data.length}
+              count={users.length}
               items={customers}
               onDeselectAll={customersSelection.handleDeselectAll}
               onDeselectOne={customersSelection.handleDeselectOne}

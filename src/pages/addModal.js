@@ -55,7 +55,7 @@ export default function SignInModal({ isOpen, onClose }) {
       aria-describedby="sign-in-form"
     >
       <Card className={classes.paper}>
-        <CardHeader title="Sign In" />
+        <CardHeader title="Add Account" />
         <CardContent>            
           <FormGroup>
             <Grid container spacing={2} alignItems="flex-end">
