@@ -21,7 +21,7 @@ export const AccountPopover = (props) => {
     () => {
       onClose?.();
       // auth.signOut();
-      router.push('/account');
+      router.push('/account_detail');
     },
     // [onClose, auth, router]
     [onClose, router]

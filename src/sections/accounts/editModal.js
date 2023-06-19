@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddModal({ isOpen, onClose }) {
+export default function EditModal({ isOpen, onClose,id}) {
   const classes = useStyles();
 
   return (
@@ -55,7 +55,7 @@ export default function AddModal({ isOpen, onClose }) {
       aria-describedby="sign-in-form"
     >
       <Card className={classes.paper}>
-        <CardHeader title="Add Account" />
+        <CardHeader title="Edit Account" />
         <CardContent>            
           <FormGroup>
             <Grid container spacing={2} alignItems="flex-end">
@@ -77,9 +77,10 @@ export default function AddModal({ isOpen, onClose }) {
             <Grid container spacing={2} alignItems="flex-end">
               <Grid item xs={11}>
                 <Input
-                  id="email"
+                  id="email1"
                   placeholder="Email"
                   fullWidth
+                  value={id}
                   startAdornment={
                     <InputAdornment position="start">
                       <EmailIcon />

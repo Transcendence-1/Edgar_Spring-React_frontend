@@ -20,7 +20,7 @@ export const items = [
   },
   {
     title: 'Accounts',
-    path: '/customers',
+    path: '/accounts',
     icon: (
       <SvgIcon fontSize="small">
         <UsersIcon />
