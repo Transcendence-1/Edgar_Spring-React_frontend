@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Modal,
@@ -16,6 +17,7 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import Person from '@material-ui/icons/Person'
+import UserService from 'src/services/UserService';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -43,10 +45,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditModal({ isOpen, onClose,}) {
+// export const EditModal=({ isOpen, onClose,id})=> {
+export default function EditModal({ isOpen, onClose,data }) {
   const classes = useStyles();
+  const [username, setUserName] = useState(data.username);
+  const [email, setEmail] = useState(data.email);
+  const [password, setPassword] = useState(data.passwordHash);
+  // const history = useHistory();
+  // console.log(data);
+  const handleUserName=(e)=>{
+    setUserName(e.target.value);
+  }
 
-  return (
+  const handleEmail=(e)=>{
+    setEmail(e.target.value);
+  }
+
+  const handlePassword=(e)=>{
+    setPassword(e.target.value);
+  }
+
+  const handleUpdate=(id)=>{
+    const updatedData={username:username,email:email, passwordHash:password}
+    UserService.updateUser(updatedData,id)
+    .then((res) => {
+      // setSelectedData(res.data);
+      console.log("ok");
+      onClose();
+      // setIsEditModalOpen(true);
+    })
+    .catch((e) => console.error(e));
+    // console.log(data);
+    // onClose();
+    // history.push('/account_detail');
+    // console.log(data.username);
+  }
+  return ( 
     <Modal
       className={classes.modal}
       open={isOpen}
@@ -62,13 +96,16 @@ export default function EditModal({ isOpen, onClose,}) {
               <Grid item xs={11}>
                 <Input
                   id="username"
-                  placeholder="Username"
+                  // placeholder="Username"
                   fullWidth
+                  // value={id}
+                  value={username}
                   startAdornment={
                     <InputAdornment position="start">
                       <Person />
                     </InputAdornment>
                   }
+                  onChange={handleUserName}
                 />
               </Grid>
             </Grid>
@@ -78,13 +115,15 @@ export default function EditModal({ isOpen, onClose,}) {
               <Grid item xs={11}>
                 <Input
                   id="email"
-                  placeholder="Email"
+                  // placeholder="Email"
                   fullWidth
+                  value = {email}
                   startAdornment={
                     <InputAdornment position="start">
                       <EmailIcon />
                     </InputAdornment>
                   }
+                  onChange={handleEmail}
                 />
               </Grid>
             </Grid>
@@ -94,14 +133,16 @@ export default function EditModal({ isOpen, onClose,}) {
               <Grid item xs={11}>
                 <Input
                   id="password"
-                  placeholder="Password"
+                  // placeholder="Password"
+                  value={password}
                   fullWidth
-                  type="password"
+                  type="text"
                   startAdornment={
                     <InputAdornment position="start">
                       <LockIcon />
                     </InputAdornment>
                   }
+                  onChange={handlePassword}
                 />
               </Grid>
             </Grid>
@@ -111,8 +152,10 @@ export default function EditModal({ isOpen, onClose,}) {
             variant="contained"
             color="primary"
             fullWidth
+            onClick={()=>{
+              handleUpdate(data.id)}}
           >
-            Save
+            Update
           </Button>
         </CardContent>
       </Card>

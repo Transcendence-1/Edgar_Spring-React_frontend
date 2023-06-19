@@ -196,11 +196,11 @@ const Page = () => {
   //   []
   // );
 
-  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
 
-  const handleToggleSignInModal = () => {
+  const handleToggleAddModal = () => {
     // console.log(users);
-    setIsSignInModalOpen(!isSignInModalOpen);
+    setAddModalOpen(!isAddModalOpen);
   };
 
   return (
@@ -237,11 +237,11 @@ const Page = () => {
                     </SvgIcon>
                   )}
                   variant="contained"
-                  onClick={handleToggleSignInModal}
+                  onClick={handleToggleAddModal}
                 >
                   Add
                 </Button>                
-                <AddModal isOpen={isSignInModalOpen} onClose={handleToggleSignInModal} />
+                {isAddModalOpen&&<AddModal isOpen={isAddModalOpen} onClose={handleToggleAddModal} />}
               </div>
             </Stack>
             {/* <CustomersSearch /> */}

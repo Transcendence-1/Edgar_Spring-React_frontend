@@ -23,7 +23,7 @@ import { getInitials } from 'src/utils/get-initials';
 import UserService from 'src/services/UserService';
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import EditModal from './editModal'
+import EditModal from 'src/pages/editModal'
 
 export const AccountsTable = () => {
 
@@ -53,12 +53,16 @@ export const AccountsTable = () => {
   const accountsIds = useAccountIds(accounts);
   const accountsSelection = useSelection(accountsIds);
   const selected = accountsSelection.selected;
+  const [selectedData, setSelectedData]= useState([]);
+  const [selectedId, setSelectedId]=useState();
 
   useEffect(() => {
     UserService.getUsers().then((res) => {
       setData(res.data);
     });
   }, []);
+
+console.log(data);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -89,10 +93,39 @@ export const AccountsTable = () => {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const handleToggleEditModal = (id) => {
-    console.log(id);
-    setIsEditModalOpen(!isEditModalOpen);
+  // const handleToggleEditModal = (id) => {
+  //   console.log(id);
+  //   setIsEditModalOpen(!isEditModalOpen);    
+  //   // setSelectedId(id);
+  //   // if(isEditModalOpen){
+  //   //   UserService.getUsers().then((res) => {
+  //   //     setSelectedData(res.data);
+  //   //   });
+  //   // }
+  // };
+
+  const handleToggleEditModal = () => {
+    // console.log(id);
+    setIsEditModalOpen(!isEditModalOpen);    
+    // setSelectedId(id);
+    // if(isEditModalOpen){
+    //   UserService.getUsers().then((res) => {
+    //     setSelectedData(res.data);
+    //   });
+    // }
   };
+  const handleEdit=(id)=>{
+    // console.log(id)
+    // setSelectedId(id);
+    UserService.getUserById(id)
+        .then((res) => {
+          setSelectedData(res.data);
+          handleToggleEditModal();
+          // setIsEditModalOpen(true);
+        })
+        .catch((e) => console.error(e));
+    // handleToggleEditModal();
+  }
 
   ///////////////////////////////////////////////////////////////////////
 
@@ -170,13 +203,12 @@ export const AccountsTable = () => {
                         variant="contained"
                         startIcon={<EditIcon />}
                         color='success'
-                        onClick={handleToggleEditModal}
+                        onClick={()=>{
+                          handleEdit(account.id)}
+                        }
                       >
                         Edit
                       </Button>
-                      <EditModal isOpen={isEditModalOpen} 
-                      onClose={()=>handleToggleEditModal(account.id)} 
-                      id={account.id} />
                       <Button
                         style={{ marginLeft: '10px' }}
                         variant="contained"
@@ -207,7 +239,10 @@ export const AccountsTable = () => {
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
-      />
+      />    
+      {isEditModalOpen&&<EditModal isOpen={isEditModalOpen} 
+      onClose={handleToggleEditModal}
+      data={selectedData} />}
     </Card>
   );
 };

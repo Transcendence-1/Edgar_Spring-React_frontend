@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Modal,
@@ -11,11 +11,15 @@ import {
   Input,
   InputAdornment,
   FormGroup,
-  Grid
+  Grid,
+  TextField
 } from '@material-ui/core';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import Person from '@material-ui/icons/Person'
+import UserService from 'src/services/UserService';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -45,6 +49,37 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddModal({ isOpen, onClose }) {
   const classes = useStyles();
+  // const []
+  const [username, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleUserName = (e) => {
+    setUserName(e.target.value);
+  }
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const handleSave = () => {
+    if (username != '' && email != '' && password != '') {
+      let user = { username: username, email: email, password: password };
+      UserService.createUser(user).then((res) => {
+        // this.props.history.push('/accounts');
+        onClose();
+        console.log("added");
+      });
+    }
+    else {
+      window.alert("Please input all fields!!!")
+    }
+  }
+
 
   return (
     <Modal
@@ -56,7 +91,7 @@ export default function AddModal({ isOpen, onClose }) {
     >
       <Card className={classes.paper}>
         <CardHeader title="Add Account" />
-        <CardContent>            
+        <CardContent>
           <FormGroup>
             <Grid container spacing={2} alignItems="flex-end">
               <Grid item xs={11}>
@@ -64,44 +99,52 @@ export default function AddModal({ isOpen, onClose }) {
                   id="username"
                   placeholder="Username"
                   fullWidth
+                  required
+                  value={username}
                   startAdornment={
                     <InputAdornment position="start">
                       <Person />
                     </InputAdornment>
                   }
+                  onChange={handleUserName}
                 />
               </Grid>
             </Grid>
           </FormGroup>
-          <FormGroup style={{marginTop:'20px'}}>
+          <FormGroup style={{ marginTop: '20px' }}>
             <Grid container spacing={2} alignItems="flex-end">
               <Grid item xs={11}>
                 <Input
                   id="email"
                   placeholder="Email"
                   fullWidth
+                  value={email}
                   startAdornment={
                     <InputAdornment position="start">
                       <EmailIcon />
                     </InputAdornment>
                   }
+                  onChange={handleEmail}
                 />
               </Grid>
             </Grid>
           </FormGroup>
-          <FormGroup style={{marginTop : '20px'}}>
+          <FormGroup style={{ marginTop: '20px' }}>
             <Grid container spacing={2} alignItems="flex-end">
               <Grid item xs={11}>
                 <Input
                   id="password"
                   placeholder="Password"
                   fullWidth
+                  value={password}
                   type="password"
                   startAdornment={
                     <InputAdornment position="start">
                       <LockIcon />
                     </InputAdornment>
                   }
+                  onChange={handlePassword}
+                  required
                 />
               </Grid>
             </Grid>
@@ -111,6 +154,8 @@ export default function AddModal({ isOpen, onClose }) {
             variant="contained"
             color="primary"
             fullWidth
+            type='submit'
+            onClick={handleSave}
           >
             Save
           </Button>
@@ -119,3 +164,4 @@ export default function AddModal({ isOpen, onClose }) {
     </Modal>
   );
 }
+
