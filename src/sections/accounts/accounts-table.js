@@ -55,6 +55,10 @@ export const AccountsTable = () => {
   const selected = accountsSelection.selected;
   const [selectedData, setSelectedData]= useState([]);
   const [selectedId, setSelectedId]=useState();
+  const onDeselectAll=accountsSelection.handleDeselectAll;
+  const onSelectAll=accountsSelection.handleSelectAll;
+  const onDeselectOne=accountsSelection.handleDeselectOne;
+  const onSelectOne=accountsSelection.handleSelectOne;
 
   useEffect(() => {
     UserService.getUsers().then((res) => {
