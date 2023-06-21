@@ -22,7 +22,12 @@ export const usersSlice = createSlice({
       }
     },
     deleteUserSuccess: (state, action) => {
-      state.users = state.users.filter((user) => user.id !== action.payload.id);
+      const index = state.users.findIndex((user) => user.id === action.payload);
+      state.users.splice(index, 1);
+      // const filteredUsers = state.users.filter((user) => user.id !== action.payload.id);
+      // return {...state, users: filteredUsers};
+      // state.users = [...state.users].filter((user) => user.id !== action.payload.id);
+      console.log(state.users);
     }
   },
 });

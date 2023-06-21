@@ -34,7 +34,7 @@ export const AccountsTable = () => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
-  console.log(users);
+  // console.log(users);
 
   const useAccounts = (page, rowsPerPage, data) => {
     return useMemo(
