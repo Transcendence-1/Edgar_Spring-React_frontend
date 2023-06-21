@@ -38,32 +38,24 @@ export const getAllUsers = () => async (dispatch) => {
     UserService.getUsers().then((res)=>{
         dispatch(getUsersSuccess(res.data));
     })
-    // const response = await axios.get('/api/users');
-    // dispatch(getUsersSuccess(response.data));
 };
 
 export const addUser = (user) => async (dispatch) => {
     UserService.createUser(user).then((res)=>{
         dispatch(addUserSuccess(res.data));
-    })
-    // const response = await axios.post('/api/users', { title, description });
-    // dispatch(addUserSuccess(response.data));
+    });
 };
 
 export const updateUser = (user, id) => async (dispatch) => {
     UserService.updateUser(user, id).then((res)=>{        
         dispatch(updateUserSuccess(res.data));
-    })
-    // const response = await axios.put(`/api/users/${id}`, { title, description, completed });
-    // dispatch(updateUserSuccess(response.data));
+    });
 };
 
 export const deleteUser = (id) => async (dispatch) => {
     UserService.deleteUser(id).then((res)=>{
-        dispatch(deleteUserSuccess(response.data));
-    })
-    // const response = await axios.delete(`/api/users/${id}`);
-    // dispatch(deleteUserSuccess(response.data));
+        dispatch(deleteUserSuccess(res.data));
+    });
 };
 
 export default usersSlice.reducer;

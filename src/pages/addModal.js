@@ -20,6 +20,8 @@ import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import Person from '@material-ui/icons/Person'
 import UserService from 'src/services/UserService';
+import { useDispatch, useSelector } from 'react-redux';
+import {addUser} from './redux/reducers/usersRedecer'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -47,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddModal({ isOpen, onClose, onDataChange }) {
+export default function AddModal({ isOpen, onClose}) {
+  const dispatch = useDispatch();
+  // const users = useSelector((state)=>state.users.users);
   const classes = useStyles();
-  // const []
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -67,25 +70,14 @@ export default function AddModal({ isOpen, onClose, onDataChange }) {
   }
 
   const handleSave = () => {
-    if (username != '' && email != '' && password != '') {
+    if (username&& email&& password) {
       let user = { username: username, email: email, password: password };
-      UserService.createUser(user).then((res) => {
-        // this.props.history.push('/accounts');
-        console.log("added");
-      });
+      dispatch(addUser(user));
+      onClose();
     }
     else {
-      window.alert("Please input all fields!!!")
+      window.alert("Please input all fields!!!");
     }
-    UserService.getUsers().then((res) => {
-      onDataChange(res.data);
-    })
-    onClose();
-
-    // const updatedRow = { id: rowData.id, name, age };
-
-    // // Call the callback function with the updated data
-    // onDataChange(updatedRow);
   }
 
 
