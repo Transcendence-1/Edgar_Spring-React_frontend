@@ -16,14 +16,14 @@ const now = new Date();
 const Page = () => (
   <>
     <h1>Welcome to Dashboard!</h1>
-    
+
   </>
 );
 
 Page.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
 );
 
 export default Page;

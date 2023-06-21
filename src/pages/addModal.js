@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddModal({ isOpen, onClose }) {
+export default function AddModal({ isOpen, onClose, onDataChange }) {
   const classes = useStyles();
   // const []
   const [username, setUserName] = useState('');
@@ -71,13 +71,21 @@ export default function AddModal({ isOpen, onClose }) {
       let user = { username: username, email: email, password: password };
       UserService.createUser(user).then((res) => {
         // this.props.history.push('/accounts');
-        onClose();
         console.log("added");
       });
     }
     else {
       window.alert("Please input all fields!!!")
     }
+    UserService.getUsers().then((res) => {
+      onDataChange(res.data);
+    })
+    onClose();
+
+    // const updatedRow = { id: rowData.id, name, age };
+
+    // // Call the callback function with the updated data
+    // onDataChange(updatedRow);
   }
 
 

@@ -25,7 +25,19 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import EditModal from 'src/pages/editModal'
 
-export const AccountsTable = () => {
+export const AccountsTable = (props) => {
+  const {
+    userData: []
+  } = props;
+  console.log(props.userData);
+  // useEffect(() => {
+  //   setData(props.userData);
+  // },[props.userData]);
+
+  // const [data, setData] = useState([]);
+  // useMemo(()=>{
+  //   setData(props.userData);
+  // })
 
   const useAccounts = (page, rowsPerPage, data) => {
     return useMemo(
@@ -46,27 +58,26 @@ export const AccountsTable = () => {
   };
 
   const [page, setPage] = useState(0);
-  const [data, setData] = useState([]);
-  const count = data.length;
+  const count = props.userData.length;
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const accounts = useAccounts(page, rowsPerPage, data);
+  const accounts = useAccounts(page, rowsPerPage, props.userData);
   const accountsIds = useAccountIds(accounts);
   const accountsSelection = useSelection(accountsIds);
   const selected = accountsSelection.selected;
-  const [selectedData, setSelectedData]= useState([]);
-  const [selectedId, setSelectedId]=useState();
-  const onDeselectAll=accountsSelection.handleDeselectAll;
-  const onSelectAll=accountsSelection.handleSelectAll;
-  const onDeselectOne=accountsSelection.handleDeselectOne;
-  const onSelectOne=accountsSelection.handleSelectOne;
+  const [selectedData, setSelectedData] = useState([]);
+  const [selectedId, setSelectedId] = useState();
+  const onDeselectAll = accountsSelection.handleDeselectAll;
+  const onSelectAll = accountsSelection.handleSelectAll;
+  const onDeselectOne = accountsSelection.handleDeselectOne;
+  const onSelectOne = accountsSelection.handleSelectOne;
 
-  useEffect(() => {
-    UserService.getUsers().then((res) => {
-      setData(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   UserService.getUsers().then((res) => {
+  //     setData(res.data);
+  //   });
+  // }, []);
 
-console.log(data);
+  // console.log(items);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -85,9 +96,10 @@ console.log(data);
   const handleDelete = (id) => {
     console.log("delete", id);
     UserService.deleteUser(id).then(() => {
-      console.log("ok");
       let updatedItems = [...data].filter(i => i.id !== id);
+      console.log(updatedItems)
       setData(updatedItems);
+      // console.log("ok");
     });
   }
 
@@ -110,7 +122,7 @@ console.log(data);
 
   const handleToggleEditModal = () => {
     // console.log(id);
-    setIsEditModalOpen(!isEditModalOpen);    
+    setIsEditModalOpen(!isEditModalOpen);
     // setSelectedId(id);
     // if(isEditModalOpen){
     //   UserService.getUsers().then((res) => {
@@ -118,16 +130,16 @@ console.log(data);
     //   });
     // }
   };
-  const handleEdit=(id)=>{
+  const handleEdit = (id) => {
     // console.log(id)
     // setSelectedId(id);
     UserService.getUserById(id)
-        .then((res) => {
-          setSelectedData(res.data);
-          handleToggleEditModal();
-          // setIsEditModalOpen(true);
-        })
-        .catch((e) => console.error(e));
+      .then((res) => {
+        setSelectedData(res.data);
+        handleToggleEditModal();
+        // setIsEditModalOpen(true);
+      })
+      .catch((e) => console.error(e));
     // handleToggleEditModal();
   }
 
@@ -207,8 +219,9 @@ console.log(data);
                         variant="contained"
                         startIcon={<EditIcon />}
                         color='success'
-                        onClick={()=>{
-                          handleEdit(account.id)}
+                        onClick={() => {
+                          handleEdit(account.id)
+                        }
                         }
                       >
                         Edit
@@ -243,14 +256,17 @@ console.log(data);
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
-      />    
-      {isEditModalOpen&&<EditModal isOpen={isEditModalOpen} 
-      onClose={handleToggleEditModal}
-      data={selectedData} />}
+      />
+      {isEditModalOpen && <EditModal isOpen={isEditModalOpen}
+        onClose={handleToggleEditModal}
+        data={selectedData} />}
     </Card>
   );
 };
 
+AccountsTable.propTypes = {
+  userData: PropTypes.array
+};
 // AccountsTable.propTypes = {
 //   count: PropTypes.number,
 //   items: PropTypes.array,
